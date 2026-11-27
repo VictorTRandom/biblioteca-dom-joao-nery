@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consulte o acervo e a disponibilidade de livros da Biblioteca Escolar Dom João Nery.">
+  <meta name="theme-color" content="#13372f">
+  <title>Acervo · Biblioteca Dom João Nery</title>
+  <link rel="stylesheet" href="/biblioteca.css">
+  <script type="module" src="/catalogo.js"></script>
+</head>
+<body>
+  <header class="site-header"><div class="frame header-inner">
+    <a class="brand" href="/"><span class="monogram" aria-hidden="true">DN</span><span>Dom João Nery<small>Biblioteca escolar</small></span></a>
+    <nav aria-label="Menu principal"><a href="#acervo" aria-current="page">Acervo</a><a href="/qrcode.html">QR Code</a><a class="nav-button" href="/login.html">Área administrativa <span aria-hidden="true">↗</span></a></nav>
+  </div></header>
+  <main>
+    <section class="hero">
+      <div class="frame hero-inner">
+        <div class="hero-text">
+          <span class="eyebrow"><span class="leaf-mark" aria-hidden="true"></span> Biblioteca escolar</span>
+          <h1>Biblioteca<br>Dom João Nery<span class="hero-dot">.</span></h1>
+          <p>Explore o acervo, encontre sua próxima leitura e confira a disponibilidade antes de ir à biblioteca.</p>
+          <a href="#acervo" class="button hero-button">Explorar acervo <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="art-circle"></span><span class="art-star star-top">✦</span><span class="art-star star-bottom">✧</span>
+          <span class="art-book art-first"><i></i><b>DOM<br>JOÃO</b><i></i></span>
+          <span class="art-book art-second"><i></i><b>ACERVO<br>ESCOLAR</b><i></i></span>
+          <span class="art-book art-third"><i></i><b>NERY</b><i></i></span>
+        </div>
+      </div>
+    </section>
+    <section id="acervo" class="frame catalog-section">
+      <div class="section-heading"><div><span class="eyebrow ink">Catálogo público</span><h2>Encontre um livro</h2></div><p>Empréstimos e devoluções são feitos na biblioteca.</p></div>
+      <form id="filter" class="filter-bar" role="search">
+        <label class="search-field"><span>Pesquisar no acervo</span><input id="q" name="q" type="search" maxlength="120" placeholder="Título, autor, assunto ou código"></label>
+        <label><span>Assunto</span><select id="subjects" name="subject"><option value="0">Todos os assuntos</option></select></label>
+        <button class="button" type="submit">Buscar <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="result-line"><h3 id="results-title">Livros do acervo</h3><p id="catalog-status" role="status">Carregando acervo…</p></div>
+      <div id="books" class="book-grid"></div>
+      <div class="pager" id="pager" hidden>
+        <button type="button" class="button secondary" id="previous">← Anterior</button><span id="page-number"></span><button type="button" class="button secondary" id="next">Próxima →</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="frame">
+    <span class="footer-brand">Biblioteca Escolar Dom João Nery</span>
+    <div><strong>Colaboradores</strong><p>Vitor Miguel · Kaua · João Bartel · Davi Leal · Felipe Toisso</p></div>
+  </div></footer>
+  <template id="book-card">
+    <article class="book-card">
+      <div class="book-visual" aria-hidden="true"><div class="mock-book"><div class="mock-art"></div><span class="mock-title"></span><span class="mock-imprint">Dom João Nery</span></div></div>
+      <div class="book-card-content">
+        <div class="book-category"></div><h4 class="book-title"></h4><p class="book-author"></p>
+        <div class="book-card-footer"><span class="availability"></span><button class="text-button details" type="button">Detalhes <span aria-hidden="true">↗</span></button></div>
+      </div>
+    </article>
+  </template>
+  <dialog id="book-dialog" aria-labelledby="detail-title">
+    <form method="dialog" class="dialog-close"><button class="icon-button" aria-label="Fechar detalhes">×</button></form>
+    <span class="eyebrow ink" id="detail-subject"></span>
+    <h2 id="detail-title"></h2>
+    <p class="detail-author" id="detail-author"></p>
+    <p id="detail-description"></p>
+    <dl class="facts"><div><dt>Código</dt><dd id="detail-code"></dd></div><div><dt>Ano</dt><dd id="detail-year"></dd></div><div><dt>Exemplares disponíveis</dt><dd id="detail-stock"></dd></div></dl>
+  </dialog>
+</body>
+</html>

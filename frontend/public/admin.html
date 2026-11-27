@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Painel · Biblioteca Dom João Nery</title>
+  <link rel="stylesheet" href="/biblioteca.css">
+  <script type="module" src="/admin.js"></script>
+</head>
+<body class="interior">
+  <header class="site-header"><div class="frame header-inner">
+    <a class="brand" href="/"><span class="monogram" aria-hidden="true">DN</span><span>Dom João Nery<small>Biblioteca escolar</small></span></a>
+    <nav aria-label="Menu principal"><a href="/">Acervo público</a><button type="button" class="nav-button" id="logout" hidden>Sair</button></nav>
+  </div></header>
+  <main class="frame admin-main">
+    <p role="status" id="initial-status">Verificando acesso…</p>
+    <div id="workspace" hidden>
+      <div class="section-heading"><div><span class="eyebrow ink">Equipe da biblioteca</span><h1>Painel administrativo</h1></div><p id="session-email"></p></div>
+      <div class="metrics" id="metrics" aria-label="Totais do acervo">
+        <div><span>Títulos ativos</span><strong id="metric-titles">—</strong></div>
+        <div><span>Exemplares ativos</span><strong id="metric-copies">—</strong></div>
+        <div><span>Empréstimos ativos</span><strong id="metric-active_loans">—</strong></div>
+        <div><span>Em atraso</span><strong id="metric-overdue">—</strong></div>
+      </div>
+      <nav class="section-nav" aria-label="Seções administrativas">
+        <button type="button" data-view="books">Livros e exemplares</button>
+        <button type="button" data-view="authors">Autores</button>
+        <button type="button" data-view="subjects">Assuntos</button>
+        <button type="button" data-view="students">Alunos</button>
+        <button type="button" data-view="loans">Empréstimos e relatórios</button>
+      </nav>
+      <p id="admin-status" class="status" role="status"></p>
+      <section class="panel manage-panel" id="manage" aria-labelledby="view-title">
+        <div class="panel-heading"><div><h2 id="view-title"></h2><p id="view-description"></p></div><button type="button" class="button" id="add-item"></button></div>
+        <div id="loan-tools" class="loan-tools" hidden>
+          <label>Exibir <select id="loan-filter"><option value="todos">Todo o histórico</option><option value="ativos">Empréstimos ativos</option><option value="atrasados">Empréstimos atrasados</option></select></label>
+          <button class="button secondary" id="download-report" type="button">Exportar CSV ↓</button>
+        </div>
+        <div id="admin-table" class="table-wrap"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="frame"><span class="footer-brand">Biblioteca Escolar Dom João Nery</span><p>Vitor Miguel · Kaua · João Bartel · Davi Leal · Felipe Toisso</p></div></footer>
+  <dialog id="edit-dialog" aria-labelledby="edit-title">
+    <form method="dialog" class="dialog-close"><button class="icon-button" aria-label="Fechar formulário">×</button></form>
+    <h2 id="edit-title"></h2>
+    <form class="stack" id="edit-form">
+      <div class="form-grid" id="edit-fields"></div>
+      <button class="button" type="submit">Salvar</button>
+    </form>
+    <p id="edit-status" class="status" role="status"></p>
+  </dialog>
+  <dialog id="copy-dialog" aria-labelledby="copy-title">
+    <form method="dialog" class="dialog-close"><button class="icon-button" aria-label="Fechar exemplares">×</button></form>
+    <h2 id="copy-title">Exemplares</h2><p id="copy-book"></p>
+    <form id="copy-form" class="copy-form">
+      <label>Quantidade a adicionar<input name="quantity" type="number" min="1" max="100" value="1" required></label>
+      <button class="button" type="submit">Gerar códigos</button>
+    </form>
+    <p id="copy-status" class="status" role="status"></p>
+    <div id="copy-table" class="table-wrap"></div>
+  </dialog>
+</body>
+</html>

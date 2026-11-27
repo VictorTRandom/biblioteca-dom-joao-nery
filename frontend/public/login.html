@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Entrar · Biblioteca Dom João Nery</title>
+  <link rel="stylesheet" href="/biblioteca.css">
+  <script type="module" src="/login.js"></script>
+</head>
+<body class="interior">
+  <header class="site-header"><div class="frame header-inner">
+    <a class="brand" href="/"><span class="monogram" aria-hidden="true">DN</span><span>Dom João Nery<small>Biblioteca escolar</small></span></a>
+    <nav aria-label="Menu principal"><a href="/">Voltar ao acervo</a></nav>
+  </div></header>
+  <main class="frame inset-main">
+    <section class="panel login-panel">
+      <span class="eyebrow ink">Equipe da biblioteca</span>
+      <h1>Área administrativa</h1>
+      <p>Entre com a conta autorizada para administrar o acervo e os empréstimos.</p>
+      <form id="login-form" class="stack">
+        <label>E-mail<input name="email" type="email" autocomplete="username" maxlength="254" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="current-password" maxlength="72" required></label>
+        <button class="button" type="submit">Entrar <span aria-hidden="true">→</span></button>
+      </form>
+      <p id="login-status" role="status"></p>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="frame"><span class="footer-brand">Biblioteca Escolar Dom João Nery</span><p>Vitor Miguel · Kaua · João Bartel · Davi Leal · Felipe Toisso</p></div></footer>
+</body>
+</html>

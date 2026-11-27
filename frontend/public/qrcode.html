@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR Code · Biblioteca Dom João Nery</title>
+  <link rel="stylesheet" href="/biblioteca.css">
+  <script type="module" src="/qrcode.js"></script>
+</head>
+<body class="interior">
+  <header class="site-header"><div class="frame header-inner">
+    <a class="brand" href="/"><span class="monogram" aria-hidden="true">DN</span><span>Dom João Nery<small>Biblioteca escolar</small></span></a>
+    <nav aria-label="Menu principal"><a href="/">Voltar ao acervo</a></nav>
+  </div></header>
+  <main class="frame inset-main">
+    <section class="panel qr-panel">
+      <div><span class="eyebrow ink">Divulgação</span><h1>QR Code do acervo</h1>
+      <p>Gere uma imagem para o mural da escola. Ao escanear, o celular abre o catálogo público.</p>
+      <form class="stack" id="qr-form">
+        <label>Endereço do catálogo<input type="url" name="url" maxlength="512" required></label>
+        <button class="button" type="submit">Gerar QR Code</button>
+      </form><p id="qr-status" role="status"></p></div>
+      <div class="qr-preview">
+        <p id="qr-hint">O código aparecerá aqui.</p>
+        <img id="qr-image" width="260" height="260" alt="QR Code para abrir o catálogo da biblioteca" hidden>
+        <a id="qr-download" class="button secondary" download="qrcode-biblioteca-dom-joao-nery.png" hidden>Baixar PNG ↓</a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="frame"><span class="footer-brand">Biblioteca Escolar Dom João Nery</span><p>Vitor Miguel · Kaua · João Bartel · Davi Leal · Felipe Toisso</p></div></footer>
+</body>
+</html>

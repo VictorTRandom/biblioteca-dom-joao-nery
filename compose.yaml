@@ -1,0 +1,32 @@
+services:
+  banco:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: biblioteca
+      POSTGRES_USER: ${DB_USER:-biblioteca}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Preencha DB_PASSWORD no arquivo .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      start_period: 10s
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - postgres_dados:/var/lib/postgresql/data
+  biblioteca:
+    build: .
+    depends_on:
+      banco:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8096:8080"
+    environment:
+      DB_JDBC_URL: jdbc:postgresql://banco:5432/biblioteca
+      DB_USER: ${DB_USER:-biblioteca}
+      DB_PASSWORD: ${DB_PASSWORD:?Preencha DB_PASSWORD no arquivo .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Preencha ADMIN_EMAIL no arquivo .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Preencha ADMIN_PASSWORD no arquivo .env}
+      COOKIE_SECURE: "false"
+      DEMO_DATA: ${DEMO_DATA:-true}
+volumes:
+  postgres_dados: {}

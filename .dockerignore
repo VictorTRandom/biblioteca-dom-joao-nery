@@ -1,0 +1,10 @@
+.git
+.env*
+*.local.json
+*.log
+target
+dist
+node_modules
+frontend/.vercel
+frontend/node_modules
+relatorios

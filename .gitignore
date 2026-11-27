@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+*.local.json
+*.log
+.venv/
+__pycache__/
+target/
+dist/
+node_modules/
+.vercel/
+/relatorios/
