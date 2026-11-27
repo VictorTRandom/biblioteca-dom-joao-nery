@@ -30,6 +30,10 @@ final class Inputs {
 
     record Status(@NotNull Boolean active) {}
 
+    record PublicRequest(@NotNull @Positive Long bookId, @NotBlank @Size(max = 40) String ra) {}
+
+    record ApproveRequest(@NotNull LocalDate dueDate) {}
+
     record Loan(@NotNull @Positive Long studentId,
                 @NotNull @Positive Long bookId,
                 @Positive Long copyId,

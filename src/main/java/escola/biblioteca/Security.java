@@ -47,7 +47,7 @@ class Security {
                 .addFilterBefore(new SameOriginWrites(), LogoutFilter.class)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(HttpMethod.GET, "/api/catalog", "/api/catalog/**", "/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login", "/api/catalog/requests").permitAll()
                         .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .formLogin(form -> form.loginPage("/login.html").loginProcessingUrl("/api/login")

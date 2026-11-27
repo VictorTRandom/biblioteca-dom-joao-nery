@@ -4,16 +4,22 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
+import jakarta.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,6 +49,17 @@ class CatalogController {
     @GetMapping("/{id}")
     Map<String, Object> book(@PathVariable long id) {
         return library.publicBook(id);
+    }
+
+    @PostMapping("/requests")
+    @ResponseStatus(HttpStatus.CREATED)
+    Map<String, Object> requestLoan(@Valid @RequestBody Inputs.PublicRequest input) {
+        return library.requestLoan(input);
+    }
+
+    @GetMapping("/requests/{trackingCode}")
+    Map<String, Object> track(@PathVariable UUID trackingCode) {
+        return library.track(trackingCode);
     }
 
     @GetMapping(value = "/qr", produces = MediaType.IMAGE_PNG_VALUE)

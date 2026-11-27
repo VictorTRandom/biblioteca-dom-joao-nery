@@ -120,6 +120,22 @@ class AdminController {
         return library.returnLoan(id);
     }
 
+    @GetMapping("/requests")
+    List<Map<String, Object>> requests(@RequestParam(defaultValue = "pendentes") String filter) {
+        return library.requests(filter);
+    }
+
+    @PostMapping("/requests/{id}/approve")
+    Map<String, Object> approveRequest(@PathVariable long id, @Valid @RequestBody Inputs.ApproveRequest input) {
+        return library.approveRequest(id, input.dueDate());
+    }
+
+    @PostMapping("/requests/{id}/reject")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void rejectRequest(@PathVariable long id) {
+        library.rejectRequest(id);
+    }
+
     @GetMapping("/summary")
     Map<String, Object> summary() {
         return library.totals();
