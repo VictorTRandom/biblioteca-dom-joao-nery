@@ -28,6 +28,7 @@
         <button type="button" data-view="authors">Autores</button>
         <button type="button" data-view="subjects">Assuntos</button>
         <button type="button" data-view="students">Alunos</button>
+        <button type="button" data-view="requests">Pedidos do catálogo</button>
         <button type="button" data-view="loans">Empréstimos e relatórios</button>
       </nav>
       <p id="admin-status" class="status" role="status"></p>
@@ -36,6 +37,9 @@
         <div id="loan-tools" class="loan-tools" hidden>
           <label>Exibir <select id="loan-filter"><option value="todos">Todo o histórico</option><option value="ativos">Empréstimos ativos</option><option value="atrasados">Empréstimos atrasados</option></select></label>
           <button class="button secondary" id="download-report" type="button">Exportar CSV ↓</button>
+        </div>
+        <div id="request-filter-bar" class="loan-tools" hidden>
+          <label>Exibir <select id="request-filter"><option value="pendentes">Pedidos pendentes</option><option value="todos">Todos os pedidos</option></select></label>
         </div>
         <div id="admin-table" class="table-wrap"></div>
       </section>

@@ -14,9 +14,11 @@ const sections = {
   authors: ["Autores", "Gerencie os autores vinculados aos títulos.", "Novo autor"],
   subjects: ["Assuntos", "Organize os títulos por tema.", "Novo assunto"],
   students: ["Alunos", "Gerencie os cadastros usados nos empréstimos.", "Novo aluno"],
+  requests: ["Pedidos do catálogo", "Confira o RA e registre a retirada quando o aluno vier buscar o livro.", ""],
   loans: ["Empréstimos e relatórios", "Registre retiradas e devoluções e consulte o histórico.", "Novo empréstimo"],
 };
 const loanStatuses = { em_aberto: "Em aberto", atrasado: "Atrasado", devolvido: "Devolvido" };
+const requestStatuses = { pendente: "Pendente", aprovado: "Retirada confirmada", recusado: "Recusado" };
 let view = "books";
 let renderedRequest = 0;
 let editorRequest = 0;
@@ -114,6 +116,15 @@ function draw(kind, rows) {
       formatDate(row.returned_at), tag(loanStatuses[row.status], row.status === "atrasado" ? "warn" : "neutral"),
       row.notes || "—", row.returned_at ? "—" : action("Devolver", button => returnLoan(row, button)),
     ]));
+  } else if (kind === "requests") {
+    table(container, ["Pedido", "RA", "Aluno", "Livro", "Situação", "Prazo", "Ações"], rows.map(row => [
+      schoolDate.format(new Date(row.requested_at)), row.student_ra, row.student || "RA sem cadastro", row.title,
+      tag(requestStatuses[row.status], row.status === "recusado" ? "warn" : row.status === "pendente" ? "neutral" : ""),
+      formatDate(row.due_date), row.status === "pendente" ? actions(
+        row.student_active ? action("Confirmar retirada", () => openRequestApproval(row)) : element("span", "Confira o RA"),
+        action("Recusar", button => rejectRequest(row, button), true),
+      ) : "—",
+    ]));
   } else {
     table(container, ["Nome", "Ações"], rows.map(row => [row.name, actions(...editRemove(row))]));
   }
@@ -122,7 +133,8 @@ function draw(kind, rows) {
 async function refresh() {
   const request = ++renderedRequest;
   const requested = view;
-  const suffix = requested === "loans" ? `?filter=${$("#loan-filter").value}` : "";
+  const filters = { loans: "#loan-filter", requests: "#request-filter" };
+  const suffix = filters[requested] ? `?filter=${$(filters[requested]).value}` : "";
   $("#admin-table").replaceChildren(element("p", "Carregando…", "status"));
   $("#add-item").disabled = true;
   $("#download-report").disabled = true;
@@ -150,7 +162,9 @@ function selectView(next) {
   $("#view-title").textContent = title;
   $("#view-description").textContent = description;
   $("#add-item").textContent = add;
+  $("#add-item").hidden = next === "requests";
   $("#loan-tools").hidden = next !== "loans";
+  $("#request-filter-bar").hidden = next !== "requests";
   for (const tab of document.querySelectorAll("[data-view]")) {
     if (tab.dataset.view === next) tab.setAttribute("aria-current", "true");
     else tab.removeAttribute("aria-current");
@@ -261,6 +275,43 @@ async function loanFields(fields, editorNumber) {
     book, copy, field("dueDate", "Devolução prevista", minDate, { type: "date", min: minDate, required: true }),
     field("notes", "Observações", "", { type: "textarea", maxLength: 1000, full: true }),
   );
+}
+
+function openRequestApproval(row) {
+  editorRequest++;
+  $("#edit-title").textContent = `Confirmar retirada de ${row.title}`;
+  const today = new Date();
+  const minDate = schoolDate.format(today).split("/").reverse().join("-");
+  const nextWeek = schoolDate.format(new Date(today.getTime() + 7 * 86_400_000)).split("/").reverse().join("-");
+  $("#edit-fields").replaceChildren(
+    element("p", `${row.student} · RA ${row.student_ra}`, "full"),
+    field("dueDate", "Devolução prevista", nextWeek, { type: "date", min: minDate, required: true, full: true }),
+  );
+  saveForm = async data => {
+    const result = await call(`/requests/${row.id}/approve`, {
+      method: "POST", body: { dueDate: data.get("dueDate") },
+    });
+    editDialog.close();
+    await refresh();
+    showStatus(status, `Retirada confirmada para o exemplar ${result.copy_code}.`);
+  };
+  editForm.hidden = false;
+  showStatus(editStatus);
+  editDialog.showModal();
+}
+
+async function rejectRequest(row, button) {
+  if (!confirm(`Recusar o pedido de ${row.title}?`)) return;
+  button.disabled = true;
+  try {
+    await call(`/requests/${row.id}/reject`, { method: "POST" });
+    await refresh();
+    showStatus(status, "Pedido recusado.");
+  } catch (error) {
+    showStatus(status, error.message, true);
+  } finally {
+    button.disabled = false;
+  }
 }
 
 async function saveItem(kind, row, data) {
@@ -387,6 +438,7 @@ copyForm.addEventListener("submit", async event => {
 
 $("#add-item").addEventListener("click", () => openEditor(view));
 $("#loan-filter").addEventListener("change", () => refresh());
+$("#request-filter").addEventListener("change", () => refresh());
 $("#download-report").addEventListener("click", downloadReport);
 document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => selectView(button.dataset.view)));
 $("#logout").addEventListener("click", async () => {

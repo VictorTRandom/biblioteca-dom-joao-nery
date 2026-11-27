@@ -97,6 +97,31 @@ def run(url, email, password):
     admin.request(f"/admin/books/{book['id']}", "PUT", {**updates, "active": False})
     expect(404, lambda: public.request(f"/catalog/{book['id']}"))
     admin.request(f"/admin/books/{other['id']}", "DELETE")
+    request_book = create("books", {**model, "title": f"Pedido pelo catálogo {token}"})
+    request_data = {"bookId": request_book["id"], "ra": f"TESTE-{token}"}
+    pending = public.request("/catalog/requests", "POST", request_data)
+    assert pending["status"] == "pendente" and "student_ra" not in pending and "student" not in pending
+    tracking = "/catalog/requests/" + pending["tracking_code"]
+    assert public.request(tracking)["status"] == "pendente"
+    assert public.request(f"/catalog/{request_book['id']}")["available"] == 1
+    expect(409, lambda: public.request("/catalog/requests", "POST", request_data))
+    expect(401, lambda: public.request("/admin/requests"))
+    queue = admin.request("/admin/requests")
+    queued = next(entry for entry in queue if entry["title"] == request_book["title"])
+    assert queued["student"] == "Estudante fictício"
+    approval = f"/admin/requests/{queued['id']}/approve"
+    booked = admin.request(approval, "POST", {"dueDate": school_today()})
+    assert admin.request(approval, "POST", {"dueDate": school_today()})["id"] == booked["id"]
+    assert public.request(tracking)["status"] == "aprovado"
+    assert public.request(f"/catalog/{request_book['id']}")["available"] == 0
+    admin.request(f"/admin/loans/{booked['id']}/return", "POST")
+    assert public.request(tracking)["returned_at"] and public.request(f"/catalog/{request_book['id']}")["available"] == 1
+    rejected = public.request("/catalog/requests", "POST", {"bookId": request_book["id"], "ra": f"INEXISTENTE-{token}"})
+    invalid = next(entry for entry in admin.request("/admin/requests") if entry["student_ra"] == f"INEXISTENTE-{token}")
+    expect(409, lambda: admin.request(f"/admin/requests/{invalid['id']}/approve", "POST", {"dueDate": school_today()}))
+    admin.request(f"/admin/requests/{invalid['id']}/reject", "POST")
+    assert public.request("/catalog/requests/" + rejected["tracking_code"])["status"] == "recusado"
+    print("Pedidos públicos, acompanhamento, aprovação, recusa e estoque verificados.")
     # A instalação de demonstração contém um empréstimo fictício atrasado.
     overdue = admin.request("/admin/loans?filter=atrasados")
     assert overdue and all(item["status"] == "atrasado" for item in overdue)

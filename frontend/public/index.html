@@ -32,7 +32,11 @@
       </div>
     </section>
     <section id="acervo" class="frame catalog-section">
-      <div class="section-heading"><div><span class="eyebrow ink">Catálogo público</span><h2>Encontre um livro</h2></div><p>Empréstimos e devoluções são feitos na biblioteca.</p></div>
+      <div class="section-heading">
+        <div><span class="eyebrow ink">Catálogo público</span><h2>Encontre um livro</h2></div>
+        <div class="catalog-actions"><p>Solicite o empréstimo pelo site e retire na biblioteca.</p>
+          <button type="button" id="track-open" class="text-button">Consultar pedido <span aria-hidden="true">↗</span></button></div>
+      </div>
       <form id="filter" class="filter-bar" role="search">
         <label class="search-field"><span>Pesquisar no acervo</span><input id="q" name="q" type="search" maxlength="120" placeholder="Título, autor, assunto ou código"></label>
         <label><span>Assunto</span><select id="subjects" name="subject"><option value="0">Todos os assuntos</option></select></label>
@@ -55,6 +59,7 @@
       <div class="book-card-content">
         <div class="book-category"></div><h4 class="book-title"></h4><p class="book-author"></p>
         <div class="book-card-footer"><span class="availability"></span><button class="text-button details" type="button">Detalhes <span aria-hidden="true">↗</span></button></div>
+        <button class="button book-request" type="button">Solicitar empréstimo</button>
       </div>
     </article>
   </template>
@@ -65,6 +70,36 @@
     <p class="detail-author" id="detail-author"></p>
     <p id="detail-description"></p>
     <dl class="facts"><div><dt>Código</dt><dd id="detail-code"></dd></div><div><dt>Ano</dt><dd id="detail-year"></dd></div><div><dt>Exemplares disponíveis</dt><dd id="detail-stock"></dd></div></dl>
+    <button class="button detail-request" id="detail-request" type="button">Solicitar empréstimo</button>
+  </dialog>
+  <dialog id="request-dialog" aria-labelledby="request-title">
+    <form method="dialog" class="dialog-close"><button class="icon-button" aria-label="Fechar solicitação">×</button></form>
+    <h2 id="request-title">Solicitar empréstimo</h2>
+    <p id="request-book" class="detail-author"></p>
+    <p>A equipe da biblioteca confirma o empréstimo quando você for buscar o livro.</p>
+    <form id="request-form" class="stack">
+      <label>RA do aluno<input name="ra" maxlength="40" required></label>
+      <button class="button" type="submit">Enviar pedido <span aria-hidden="true">→</span></button>
+    </form>
+    <p id="request-status" class="status" role="status"></p>
+    <div id="request-result" class="request-result" hidden>
+      <label>Seu código de acompanhamento<input id="request-code" readonly></label>
+      <div class="request-tools">
+        <button class="button secondary" type="button" id="copy-code">Copiar código</button>
+        <button class="text-button" type="button" id="track-request">Consultar pedido ↗</button>
+      </div>
+      <p>Guarde o código para consultar a situação do pedido.</p>
+    </div>
+  </dialog>
+  <dialog id="track-dialog" aria-labelledby="track-title">
+    <form method="dialog" class="dialog-close"><button class="icon-button" aria-label="Fechar consulta">×</button></form>
+    <h2 id="track-title">Consultar pedido</h2>
+    <form id="track-form" class="stack">
+      <label>Código de acompanhamento<input name="tracking" maxlength="36" autocomplete="off" required></label>
+      <button class="button" type="submit">Consultar</button>
+    </form>
+    <p id="track-status" class="status" role="status"></p>
+    <div id="track-result" class="request-result" hidden></div>
   </dialog>
 </body>
 </html>

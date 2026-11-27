@@ -7,6 +7,7 @@ Sistema de biblioteca para o TCC de Vitor Miguel, Kaua, João Bartel, Davi Leal 
 - Catálogo público com busca por título, autor, assunto ou código, filtro por assunto, detalhes e disponibilidade.
 - Painel com login administrativo para criar, editar, inativar e, quando permitido pelo histórico, excluir cadastros.
 - Código **LIV** para cada título e código **EX** para cada exemplar físico. Os códigos são gerados ao salvar e permanecem os mesmos depois de uma edição.
+- Pedido de empréstimo gratuito pelo catálogo, com acompanhamento por código e confirmação da retirada pela equipe.
 - Empréstimo por exemplar, devolução, histórico, filtros de atraso e relatório CSV.
 - QR Code em PNG para o endereço do catálogo.
 - Automação em Python para verificar a API, gerar o QR Code e exportar relatórios.
@@ -16,7 +17,7 @@ Sistema de biblioteca para o TCC de Vitor Miguel, Kaua, João Bartel, Davi Leal 
 1. Abra a URL pública da Vercel no computador e no celular. Pesquise por autor ou assunto e abra os detalhes de um livro.
 2. Entre em **Área administrativa** com a conta inicial criada na implantação. Cadastre um autor e um assunto caso o banco esteja vazio.
 3. Em **Livros e exemplares**, cadastre um título com um exemplar e anote os códigos LIV e EX. Cadastre um aluno fictício.
-4. Em **Empréstimos e relatórios**, empreste o exemplar. O catálogo deve mostrar zero disponíveis e o painel deixa de oferecer esse título para novo empréstimo.
+4. No catálogo público, clique em **Solicitar empréstimo** e informe o RA do aluno. Guarde o código de acompanhamento. No painel **Pedidos do catálogo**, confirme a retirada com o prazo de devolução. O catálogo deve mostrar zero disponíveis para o título. Empréstimos feitos diretamente pela equipe também ficam disponíveis em **Empréstimos e relatórios**.
 5. Registre a devolução. O estoque volta a um e o histórico continua disponível.
 6. Abra **QR Code** no site publicado e baixe o PNG. Escaneie em outro aparelho para confirmar a abertura da página pública.
 
@@ -31,6 +32,8 @@ Sistema de biblioteca para o TCC de Vitor Miguel, Kaua, João Bartel, Davi Leal 
 | Automação | Python 3.10 ou superior com biblioteca padrão, em `automacao` |
 
 O navegador envia pedidos à API e nunca recebe credenciais do PostgreSQL. A API usa sessão administrativa, cookie HttpOnly e Secure em HTTPS, validação de entrada e senhas com BCrypt. O frontend público recebe apenas os dados do catálogo. O índice único parcial impede dois empréstimos ativos para o mesmo exemplar e as chaves estrangeiras preservam o histórico. Desativar um título remove-o do catálogo, preservando seus registros e permitindo devolver cópias emprestadas.
+
+Enviar um pedido pelo catálogo mantém o estoque disponível até a confirmação, e o código de acompanhamento exibe somente o título e a situação do pedido. Na retirada, a API confere se o RA corresponde a um aluno ativo, cria um empréstimo e vincula o registro ao pedido na mesma transação.
 
 ## Implantação na nuvem
 
